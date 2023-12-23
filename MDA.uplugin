@@ -1,0 +1,38 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "MDA",
+	"Description": "A plugin that provides an animation blueprint node for using additive animations.",
+	"Category": "Animation",
+	"CreatedBy": "dest1yo",
+	"CreatedByURL": "https://github.com/dest1yo/MDA",
+	"DocsURL": "https://github.com/dest1yo/MDA",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/dest1yo/MDA",
+	"EngineVersion": "5.2.0",
+	"CanContainContent": false,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": false,
+	"Installed": true,
+	"EnabledByDefault": true,
+	"Modules": [
+		{
+			"Name": "MDARuntime",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"Linux",
+				"Android",
+				"IOS"
+			]
+		},
+		{
+			"Name": "MDAEditor",
+			"Type": "UncookedOnly",
+			"LoadingPhase": "PreDefault"
+		}
+	]
+}
