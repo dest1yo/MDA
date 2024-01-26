@@ -1,14 +1,39 @@
 # MDA  
 
-## What's this  
-MDA is a plugin of Unreal Engine that provides an animation blueprint node for using additive animations.  
+## What's this
+MDA is a plugin of Unreal Engine that provides an animation blueprint node for using additive animations.
 
-## Difference from native method of Unreal Engine  
-In principle, it is just the addition and subtraction of position and the multiplication and division of rotation matrices.  
-So that it is suitable for the additive animations of `Call of Duty`.  
+![node_preview](Intro/images/node_preview.png)
 
-## How to use  
-You can create it by searching for `MDA` in Animation Blueprint.  
-Now it provides 2 modes to allow you to overlay animations which can be found in the node details panel.  
+## What's special
+As described in the label of [Mode](#mode), it is suitable for the additive animations from `Call of Duty` titles.
+
+## Mode
 * Add  
+  `Location`: BasePose + AdditivePose  
+  `Rotation`: BasePose * AdditivePose
+
 * Subtract  
+  `Location`: BasePose - AdditivePose  
+  `Rotation`: BasePose / AdditivePose
+
+* CoD Add  
+  `Location`: BasePose + AdditivePose - ReferencePose  
+  `Rotation`: BasePose * AdditivePose
+
+## How to use
+* Create new nodes:  
+Search for `MDA` in Animation Blueprint.  
+![create_new_nodes](Intro/images/create_new_nodes.png)
+
+* Change the modes of layers:  
+Options of the modes can be found in the node details panel.  
+![node_settings](Intro/images/node_settings.png)
+
+* Add new layer pins:  
+Click the button named `Add pin` of the node.  
+![add_new_pins](Intro/images/add_new_pins.png)
+
+* Remove layer pins:  
+Right-click the layer pin and click the Remove button.  
+![remove_pins](Intro/images/remove_pins.png)

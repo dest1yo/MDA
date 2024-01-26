@@ -191,6 +191,11 @@ void FAnimNode_MDA::AccumulateAdditivePose(TArrayView<const FCompactPose> Source
 				AccumulateAdditivePoseInternal<EMDABlendMode::Subtract>(OutPose, SourcePoses[PoseIndex], SourceWeights[PoseIndex]);
 				break;
 			}
+			case EMDABlendMode::CoDAdd:
+			{
+				AccumulateAdditivePoseInternal<EMDABlendMode::CoDAdd>(OutPose, SourcePoses[PoseIndex], SourceWeights[PoseIndex]);
+				break;
+			}
 			default:
 			{
 				break;

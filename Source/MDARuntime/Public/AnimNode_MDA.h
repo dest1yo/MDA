@@ -11,6 +11,7 @@ enum class EMDABlendMode : uint8
 {
 	Add UMETA(DisplayName="Add"),
 	Subtract UMETA(DisplayName="Subtract"),
+	CoDAdd UMETA(DisplayName="CoD Add"),
 };
 
 // MDA; has dynamic number of blendposes
@@ -97,10 +98,10 @@ private:
 
 /** Accumulates weighted AdditivePose to BasePose. Rotations are NOT normalized. */
 template <EMDABlendMode>
-static void AccumulateAdditivePoseInternal(FCompactPose &BasePose, const FCompactPose &AdditivePose, float Weight);
+static void AccumulateAdditivePoseInternal(FCompactPose& BasePose, const FCompactPose& AdditivePose, float Weight);
 
 template <>
-inline void AccumulateAdditivePoseInternal<EMDABlendMode::Add>(FCompactPose &BasePose, const FCompactPose &AdditivePose, float Weight)
+inline void AccumulateAdditivePoseInternal<EMDABlendMode::Add>(FCompactPose& BasePose, const FCompactPose& AdditivePose, float Weight)
 {
 	// Check wight value
 	if (!FAnimWeight::IsRelevant(Weight))
@@ -119,7 +120,7 @@ inline void AccumulateAdditivePoseInternal<EMDABlendMode::Add>(FCompactPose &Bas
 }
 
 template <>
-inline void AccumulateAdditivePoseInternal<EMDABlendMode::Subtract>(FCompactPose &BasePose, const FCompactPose &AdditivePose, float Weight)
+inline void AccumulateAdditivePoseInternal<EMDABlendMode::Subtract>(FCompactPose& BasePose, const FCompactPose& AdditivePose, float Weight)
 {
 	// Check wight value
 	if (!FAnimWeight::IsRelevant(Weight))
@@ -133,6 +134,26 @@ inline void AccumulateAdditivePoseInternal<EMDABlendMode::Subtract>(FCompactPose
 
 		BaseTransform.SetLocation(BaseTransform.GetLocation() - AdditiveTransform.GetLocation());
 		BaseTransform.SetRotation(BaseTransform.GetRotation() * AdditiveTransform.GetRotation().Inverse());
+		BaseTransform.SetScale3D(UE::Math::TVector<double>::One());
+	}
+}
+
+template <>
+inline void AccumulateAdditivePoseInternal<EMDABlendMode::CoDAdd>(FCompactPose& BasePose, const FCompactPose& AdditivePose, float Weight)
+{
+	// Check wight value
+	if (!FAnimWeight::IsRelevant(Weight))
+		return;
+
+	for (const FCompactPoseBoneIndex BoneIndex : BasePose.ForEachBoneIndex())
+	{
+		FTransform RefTransform = BasePose.GetRefPose(BoneIndex);
+		FTransform& BaseTransform = BasePose[BoneIndex];
+		FTransform AdditiveTransform = AdditivePose[BoneIndex];
+		AdditiveTransform.BlendWith(FTransform::Identity, 1.f - Weight);
+
+		BaseTransform.SetLocation(BaseTransform.GetLocation() + AdditiveTransform.GetLocation() - RefTransform.GetLocation());
+		BaseTransform.SetRotation(BaseTransform.GetRotation() * AdditiveTransform.GetRotation());
 		BaseTransform.SetScale3D(UE::Math::TVector<double>::One());
 	}
 }
