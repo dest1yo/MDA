@@ -234,9 +234,16 @@ void FAnimNode_MDA::BlendCurves1(const TArrayView<const FBlendedCurve> SourceCur
 	if (SourceCurves.IsEmpty())
 		return;
 
+
+	TArray<const FBlendedCurve*> SourceCurvesPtr;
+	for (const FBlendedCurve& Curve : SourceCurves)
+	{
+		SourceCurvesPtr.Add(&Curve);
+	}
+	
 	if (BlendOption == ECurveBlendOption::Type::BlendByWeight)
 	{
-		BlendCurves(SourceCurves, SourceWeights, OutCurve);
+		BlendCurves(SourceCurvesPtr, SourceWeights, OutCurve);
 	}
 	else if (BlendOption == ECurveBlendOption::Type::NormalizeByWeight)
 	{
@@ -255,11 +262,11 @@ void FAnimNode_MDA::BlendCurves1(const TArrayView<const FBlendedCurve> SourceCur
 				NormalizeSourceWeights[Idx] = SourceWeights[Idx] / SumOfWeight;
 			}
 
-			BlendCurves(SourceCurves, NormalizeSourceWeights, OutCurve);
+			BlendCurves(SourceCurvesPtr, NormalizeSourceWeights, OutCurve);
 		}
 		else
 		{
-			BlendCurves(SourceCurves, SourceWeights, OutCurve);
+			BlendCurves(SourceCurvesPtr, SourceWeights, OutCurve);
 		}
 	}
 	else if (BlendOption == ECurveBlendOption::Type::UseMaxValue)
